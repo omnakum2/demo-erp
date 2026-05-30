@@ -1,0 +1,123 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 97%;
+    --foreground: 0 0% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    /* Brand maroon #712c2d */
+    --primary: 359 44% 31%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 359 44% 25%;
+    --primary-soft: 359 44% 95%;
+
+    --secondary: 36 30% 92%;
+    --secondary-foreground: 359 44% 25%;
+
+    --muted: 36 25% 95%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 359 44% 95%;
+    --accent-foreground: 359 44% 25%;
+
+    --gold: 40 85% 55%;
+    --gold-foreground: 0 0% 12%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 60% 35%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 12%;
+
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 359 44% 31%;
+
+    --radius: 0.625rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 25%;
+    --sidebar-primary: 359 44% 31%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 359 44% 95%;
+    --sidebar-accent-foreground: 359 44% 25%;
+    --sidebar-border: 30 15% 88%;
+    --sidebar-ring: 359 44% 31%;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 359 50% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 359 30% 22%;
+    --accent-foreground: 0 0% 95%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 359 50% 55%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg;
+  }
+}
+
+/* Print: ONLY the .printable-area is rendered. */
+@media print {
+  @page { size: A4; margin: 10mm; }
+  body * { visibility: hidden !important; }
+  .printable-area, .printable-area * { visibility: visible !important; }
+  .printable-area {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+  .invoice-container {
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .no-print { display: none !important; }
+}

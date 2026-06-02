@@ -1,7 +1,7 @@
 // Centralized branding configuration.
 // Update this file (and the matching HSL tokens in src/index.css) to rebrand for another client.
 
-import logo from '@/assets/brand-logo.png';
+import logo from '@/assets/brand-logo-pdf.png';
 
 export interface BrandingConfig {
   appName: string;

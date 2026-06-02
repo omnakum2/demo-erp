@@ -120,38 +120,27 @@ export default function InvoicesPage() {
     setIsPreviewOpen(true);
   };
 
-  const handlePrint = () => {
-    if (previewInvoice) {
-      const originalTitle = document.title;
-      document.title = getInvoiceFilename(previewInvoice).replace('.pdf', '');
-      window.print();
-      document.title = originalTitle;
-    }
-  };
-  
   const handleDownloadPDF = async () => {
-    if (previewInvoice) {
-      try {
-        toast.loading('Generating PDF...', { id: 'pdf' });
-        await downloadInvoicePDF('actual-invoice-modal-doc', previewInvoice);
-        toast.success('PDF Downloaded successfully', { id: 'pdf' });
-      } catch (error) {
-        toast.error('Failed to generate PDF', { id: 'pdf' });
-      }
+    if (!previewInvoice) return;
+    try {
+      toast.loading('Generating PDF...', { id: 'pdf' });
+      await downloadInvoicePDF(previewInvoice);
+      toast.success('PDF Downloaded successfully', { id: 'pdf' });
+    } catch (error) {
+      toast.error('Failed to generate PDF', { id: 'pdf' });
     }
   };
 
   const handleEmail = async () => {
-    if (previewInvoice) {
-      try {
-        toast.loading('Preparing email and PDF...', { id: 'email' });
-        const blob = await generateInvoicePDFBlob('actual-invoice-modal-doc');
-        const base64 = await blobToBase64(blob);
-        await sendInvoiceEmail(previewInvoice, base64);
-        toast.dismiss('email');
-      } catch (error) {
-        toast.error('Failed to prepare email', { id: 'email' });
-      }
+    if (!previewInvoice) return;
+    try {
+      toast.loading('Preparing email and PDF...', { id: 'email' });
+      const blob = await generateInvoicePDFBlob(previewInvoice);
+      const base64 = await blobToBase64(blob);
+      await sendInvoiceEmail(previewInvoice, base64);
+      toast.dismiss('email');
+    } catch (error) {
+      toast.error('Failed to prepare email', { id: 'email' });
     }
   };
 
@@ -244,8 +233,7 @@ export default function InvoicesPage() {
           <DialogFooter className="no-print px-6 pb-6 gap-2">
             <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>Close</Button>
             <Button variant="outline" onClick={handleEmail}><FiMail className="h-4 w-4" /> Email to Customer</Button>
-            <Button variant="outline" onClick={handleDownloadPDF}><FiPrinter className="h-4 w-4" /> Save PDF</Button>
-            <Button onClick={handlePrint}><FiPrinter className="h-4 w-4" /> Print</Button>
+            <Button onClick={handleDownloadPDF}><FiPrinter className="h-4 w-4" /> Download PDF</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -28,17 +28,10 @@ export default function InvoiceViewPage() {
     );
   }
 
-  const handlePrint = () => {
-    const originalTitle = document.title;
-    document.title = getInvoiceFilename(invoice).replace('.pdf', '');
-    window.print();
-    document.title = originalTitle;
-  };
-
   const handleDownloadPDF = async () => {
     try {
       toast.loading('Generating PDF...', { id: 'pdf' });
-      await downloadInvoicePDF('actual-invoice-doc', invoice);
+      await downloadInvoicePDF(invoice);
       toast.success('PDF Downloaded successfully', { id: 'pdf' });
     } catch (error) {
       toast.error('Failed to generate PDF', { id: 'pdf' });
@@ -48,7 +41,7 @@ export default function InvoiceViewPage() {
   const handleEmail = async () => {
     try {
       toast.loading('Preparing email and PDF...', { id: 'email' });
-      const blob = await generateInvoicePDFBlob('actual-invoice-doc');
+      const blob = await generateInvoicePDFBlob(invoice);
       const base64 = await blobToBase64(blob);
       await sendInvoiceEmail(invoice, base64);
       toast.dismiss('email');
@@ -64,8 +57,7 @@ export default function InvoiceViewPage() {
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => navigate('/invoices')}><FiArrowLeft className="h-4 w-4" /> Back</Button>
             <Button variant="outline" onClick={handleEmail}><FiMail className="h-4 w-4" /> Email</Button>
-            <Button variant="outline" onClick={handleDownloadPDF}><FiPrinter className="h-4 w-4" /> Save PDF</Button>
-            <Button onClick={handlePrint}><FiPrinter className="h-4 w-4" /> Print</Button>
+            <Button onClick={handleDownloadPDF}><FiPrinter className="h-4 w-4" /> Download PDF</Button>
           </div>
         } />
       

@@ -40,7 +40,7 @@ const groups: NavGroup[] = [
     title: 'Product Management',
     items: [
       { title: 'Products', href: '/products' },
-      { title: 'Raw Materials', href: '/materials' },
+      // { title: 'Raw Materials', href: '/materials' },
     ],
   },
   {
@@ -48,8 +48,8 @@ const groups: NavGroup[] = [
     title: 'Employee Management',
     items: [
       { title: 'Users', href: '/users', adminOnly: true },
-      { title: 'Departments', href: '/departments', adminOnly: true },
-      { title: 'Designations', href: '/designations', adminOnly: true },
+      // { title: 'Departments', href: '/departments', adminOnly: true },
+      // { title: 'Designations', href: '/designations', adminOnly: true },
     ],
   },
 ];

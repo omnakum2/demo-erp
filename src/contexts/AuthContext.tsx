@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback, ReactNode } fr
 import { users as initialUsers } from '@/data/demoDB';
 import { UserType, UserStatus, MANAGER_DESIGNATION } from '@/types/enums';
 import type { User } from '@/types/common';
-import { designations as initialDesignations } from '@/data/demoDB';
+// import { designations as initialDesignations } from '@/data/demoDB';
 
 interface AuthContextType {
   user: User | null;
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const isAdmin = user?.userType === UserType.ADMIN;
-  const designation = user ? initialDesignations.find((d) => d.id === user.designationId) : null;
-  const hasFullAccess = isAdmin || designation?.name === MANAGER_DESIGNATION;
+//   const designation = user ? initialDesignations.find((d) => d.id === user.designationId) : null;
+  const hasFullAccess = isAdmin;
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user, isAdmin, hasFullAccess, login, logout }}>

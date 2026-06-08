@@ -11,33 +11,18 @@ export interface BaseEntity {
   updatedAt: string;
 }
 
-export interface Material extends BaseEntity {
-  code: string;
-  status: EntityStatus;
-  additionalDetails: AdditionalDetail[];
-}
-
-export interface Department extends BaseEntity {
-  name: string;
-  status: EntityStatus;
-}
-
-export interface Designation extends BaseEntity {
-  name: string;
-  status: EntityStatus;
-}
+// ─── Product ──────────────────────────────────────────────
 
 export interface Product extends BaseEntity {
   deleted: boolean;
   name: string;
-  code: string;
-  materialId: string;
-  price: number;
-  stock: number;
+  price: number; // Price per kg
   unit: string;
   status: EntityStatus;
   additionalDetails: AdditionalDetail[];
 }
+
+// ─── Customer ─────────────────────────────────────────────
 
 export interface Customer extends BaseEntity {
   code: string;
@@ -59,18 +44,16 @@ export interface User {
   password: string;
   status: UserStatus;
   userType: UserType;
-  departmentIds: string[];
-  designationId: string;
+  // departmentIds: string[];
+  // designationId: string;
   createdAt: string;
 }
 
 export interface InvoiceItem {
   productId: string;
   productName: string;
-  productCode: string;
-  material: string;
-  quantity: number;
-  unitPrice: number;
+  quantity: number; // Quantity in kg
+  unitPrice: number; // Price per kg
   unit: string;
   total: number;
 }
@@ -79,7 +62,9 @@ export interface Invoice {
   id: string;
   invoiceNumber: string;
   date: string;
+
   customerId: string;
+
   customerSnapshot: {
     code: string;
     name: string;
@@ -87,21 +72,29 @@ export interface Invoice {
     contactNumber: string;
     address: string;
   };
+
   items: InvoiceItem[];
+
   paymentMethod: PaymentMethod;
+
   subtotal: number;
   tax: number;
   total: number;
+
   notes: string;
   status: EntityStatus;
+
   createdAt: string;
 }
+
+// ─── Analytics ────────────────────────────────────────────
 
 export interface Analytics {
   dailySales: number;
   monthlySales: number;
   totalInvoices: number;
   totalProducts: number;
+
   recentTransactions: {
     id: string;
     amount: number;
@@ -109,6 +102,8 @@ export interface Analytics {
     paymentMethod: string;
   }[];
 }
+
+// ─── Table Column ─────────────────────────────────────────
 
 export interface TableColumn<T> {
   key: keyof T | string;

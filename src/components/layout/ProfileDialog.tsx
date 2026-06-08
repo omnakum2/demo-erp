@@ -10,7 +10,7 @@ interface Props { open: boolean; onOpenChange: (o: boolean) => void; }
 
 export function ProfileDialog({ open, onOpenChange }: Props) {
   const { user, logout, isAdmin, hasFullAccess } = useAuth();
-  const { getDepartmentName, getDesignationName } = useData();
+  // const { getDepartmentName, getDesignationName } = useData();
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -44,14 +44,14 @@ export function ProfileDialog({ open, onOpenChange }: Props) {
           <dd className="col-span-2 break-all">{user.email}</dd>
           <dt className="text-muted-foreground">Phone</dt>
           <dd className="col-span-2">{user.phone}</dd>
-          <dt className="text-muted-foreground">Designation</dt>
+          {/* <dt className="text-muted-foreground">Designation</dt>
           <dd className="col-span-2">{getDesignationName(user.designationId)}</dd>
           <dt className="text-muted-foreground">Departments</dt>
           <dd className="col-span-2 flex flex-wrap gap-1">
             {user.departmentIds.map((id) => (
               <Badge key={id} variant="secondary">{getDepartmentName(id)}</Badge>
             ))}
-          </dd>
+          </dd> */}
           <dt className="text-muted-foreground">Access</dt>
           <dd className="col-span-2">
             <Badge variant={isAdmin ? 'default' : hasFullAccess ? 'default' : 'secondary'}>

@@ -11,7 +11,7 @@ import { useData } from '@/contexts/DataContext';
 export default function UserViewPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { users, getDepartmentName, getDesignationName } = useData();
+  const { users } = useData();
   const user = users.find((u) => u.id === id);
 
   if (!user) {
@@ -55,16 +55,16 @@ export default function UserViewPage() {
                 <div className="text-sm font-semibold text-muted-foreground mb-1">Status</div>
                 <div><StatusBadge status={user.status} /></div>
               </div>
-              <div>
+              {/* <div>
                 <div className="text-sm font-semibold text-muted-foreground mb-1">Designation</div>
                 <div className="text-base">{getDesignationName(user.designationId)}</div>
-              </div>
-              <div className="sm:col-span-2">
+              </div> */}
+              {/* <div className="sm:col-span-2">
                 <div className="text-sm font-semibold text-muted-foreground mb-1">Departments</div>
                 <div className="flex flex-wrap gap-2">
                   {user.departmentIds.map((d) => <Badge key={d} variant="secondary">{getDepartmentName(d)}</Badge>)}
                 </div>
-              </div>
+              </div> */}
               <div>
                 <div className="text-sm font-semibold text-muted-foreground mb-1">Created</div>
                 <div className="text-sm">{new Date(user.createdAt).toLocaleString()}</div>

@@ -34,33 +34,33 @@ export interface BrandingConfig {
 }
 
 export const branding: BrandingConfig = {
-  appName: 'Vishnu Priya Brass Products',
-  primaryBrand: 'Vishnu Priya',
-  secondaryBrand: 'Brass Products',
+  appName: 'Shree Ram Vegetable Traders',
+  primaryBrand: 'Shree Ram',
+  secondaryBrand: 'Vegetable Traders',
   logo,
   company: {
-    name: 'Vishnu Priya Brass Products',
+    name: 'Shree Ram Vegetable Traders',
     address: [
-      'Plot No. 10-11, Survey No. 433, Shree Ganesh Industrial Hub,',
-      'Lalpur Road, Village: Changa, Jamnagar – 361012 Gujarat (India)',
+      'Market Yard, Okha-Jamnagar Highway, Harshadpur',
+      'JKV Nagar 3, Khambhalia, Gujarat 361305',
     ],
-    website: { label: 'vishnupriyabrass.com', url: 'https://vishnupriyabrass.com' },
-    email: 'sales@vishnupriyabrass.com',
+    website: { label: '', url: '' },
+    email: '',
   },
   currency: { code: 'INR', symbol: '₹', locale: 'en-IN' },
   theme: {
-    primary: '359 44% 31%',
-    primaryHover: '359 44% 25%',
-    accent: '40 85% 55%',
+    primary: '135 65% 35%',
+    primaryHover: '135 65% 28%',
+    accent: '38 95% 55%',
   },
   invoice: {
-    prefix: 'VPB',
+    prefix: 'SRVT',
     taxRate: 0.18,
     taxLabel: 'GST (18%)',
     footer: 'This is a computer generated invoice no signature required.',
   },
   demo: {
-    adminEmail: 'admin@vishnupriyabrass.com',
+    adminEmail: 'admin@traders.com',
     defaultPassword: 'demo@123',
   },
 };

@@ -24,8 +24,8 @@ export function InvoiceTemplate({ invoice, id }: Props) {
           <div className="whitespace-pre-line leading-relaxed text-[11px]">
             {branding.company.address.join('\n')}
           </div>
-          <div className="mt-2 text-[11px]"><strong>Email:</strong> {branding.company.email}</div>
-          <div className="text-[11px]"><strong>Website:</strong> <a href={branding.company.website.url} className="text-black underline">{branding.company.website.label}</a></div>
+          {/* <div className="mt-2 text-[11px]"><strong>Email:</strong> {branding.company.email}</div>
+          <div className="text-[11px]"><strong>Website:</strong> <a href={branding.company.website.url} className="text-black underline">{branding.company.website.label}</a></div> */}
         </div>
         <div className="flex items-center">
           <img src={branding.logo} alt={branding.primaryBrand} className="h-32 w-32 object-contain" />
@@ -63,9 +63,9 @@ export function InvoiceTemplate({ invoice, id }: Props) {
         <thead>
           <tr className="bg-[#f2f2f2]">
             <th className="border border-black border-l-0 p-2 text-center font-bold">Sr. No.</th>
-            <th className="border border-black p-2 text-center font-bold">Product Code</th>
+            {/* <th className="border border-black p-2 text-center font-bold">Product Code</th> */}
             <th className="border border-black p-2 text-center font-bold">Product Name</th>
-            <th className="border border-black p-2 text-center font-bold">Raw Material</th>
+            {/* <th className="border border-black p-2 text-center font-bold">Raw Material</th> */}
             <th className="border border-black p-2 text-center font-bold">Qty</th>
             <th className="border border-black p-2 text-center font-bold text-right">INR / Unit</th>
             <th className="border border-black border-r-0 p-2 text-center font-bold text-right">Total</th>
@@ -75,24 +75,24 @@ export function InvoiceTemplate({ invoice, id }: Props) {
           {invoice.items.map((it, idx) => (
             <tr key={it.productId}>
               <td className="border border-black border-l-0 p-2 text-center">{idx + 1}</td>
-              <td className="border border-black p-2 text-center">{it.productCode}</td>
+              {/* <td className="border border-black p-2 text-center">{it.productCode}</td> */}
               <td className="border border-black p-2 text-center">{it.productName}</td>
-              <td className="border border-black p-2 text-center">{it.material}</td>
+              {/* <td className="border border-black p-2 text-center">{it.material}</td> */}
               <td className="border border-black p-2 text-center">{it.quantity} {it.unit}</td>
               <td className="border border-black p-2 text-right">{Number(it.unitPrice).toFixed(2)}</td>
               <td className="border border-black border-r-0 p-2 text-right">{Number(it.total).toFixed(2)}</td>
             </tr>
           ))}
           <tr>
-            <td colSpan={6} className="border border-black border-l-0 p-2 font-bold text-right">Subtotal</td>
+            <td colSpan={4} className="border border-black border-l-0 p-2 font-bold text-right">Subtotal</td>
             <td className="border border-black border-r-0 p-2 text-right">{Number(invoice.subtotal).toFixed(2)}</td>
           </tr>
           <tr>
-            <td colSpan={6} className="border border-black border-l-0 p-2 font-bold text-right">{branding.invoice.taxLabel}</td>
+            <td colSpan={4} className="border border-black border-l-0 p-2 font-bold text-right">{branding.invoice.taxLabel}</td>
             <td className="border border-black border-r-0 p-2 text-right">{Number(invoice.tax).toFixed(2)}</td>
           </tr>
           <tr className="bg-[#f2f2f2]">
-            <td colSpan={6} className="border border-black border-l-0 p-2 font-bold text-right text-[14px]">Grand Total</td>
+            <td colSpan={4} className="border border-black border-l-0 p-2 font-bold text-right text-[14px]">Grand Total</td>
             <td className="border border-black border-r-0 p-2 text-right text-[14px] font-bold text-[#712c2d]">{Number(invoice.total).toFixed(2)}</td>
           </tr>
         </tbody>

@@ -20,11 +20,11 @@ import { toast } from 'sonner';
 const EMPTY = {
   name: '', phone: '', email: '', username: '', password: '',
   status: UserStatus.ACTIVE, userType: UserType.EMPLOYEE,
-  designationId: '', departmentIds: [] as string[],
+  // designationId: '', departmentIds: [] as string[],
 };
 
 export default function UsersPage() {
-  const { users, addUser, updateUser, departments, designations, getDepartmentName, getDesignationName } = useData();
+  const { users, addUser, updateUser } = useData();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
@@ -39,20 +39,20 @@ export default function UsersPage() {
       render: (row) => <span className="font-medium text-foreground">{row.name}</span>,
     },
     { key: 'userType', label: 'User Type', sortable: true, render: (r) => <span className="capitalize">{r.userType}</span> },
-    {
-      key: 'designationId', label: 'Designation',
-      render: (r) => <Badge variant="outline">{getDesignationName(r.designationId)}</Badge>,
-      getSearchValue: (r) => getDesignationName(r.designationId),
-    },
-    {
-      key: 'departmentIds', label: 'Departments',
-      render: (r) => (
-        <div className="flex flex-wrap gap-1">
-          {r.departmentIds.map((id) => <Badge key={id} variant="secondary">{getDepartmentName(id)}</Badge>)}
-        </div>
-      ),
-      getSearchValue: (r) => r.departmentIds.map((id) => getDepartmentName(id)).join(' '),
-    },
+    // {
+    //   key: 'designationId', label: 'Designation',
+    //   render: (r) => <Badge variant="outline">{getDesignationName(r.designationId)}</Badge>,
+    //   getSearchValue: (r) => getDesignationName(r.designationId),
+    // },
+    // {
+    //   key: 'departmentIds', label: 'Departments',
+    //   render: (r) => (
+    //     <div className="flex flex-wrap gap-1">
+    //       {r.departmentIds.map((id) => <Badge key={id} variant="secondary">{getDepartmentName(id)}</Badge>)}
+    //     </div>
+    //   ),
+    //   getSearchValue: (r) => r.departmentIds.map((id) => getDepartmentName(id)).join(' '),
+    // },
     {
       key: 'status', label: 'Status', sortable: true,
       render: (r) => <StatusBadge status={r.status} />,
@@ -65,32 +65,32 @@ export default function UsersPage() {
     setForm({
       name: u.name, phone: u.phone, email: u.email, username: u.username, password: '',
       status: u.status, userType: u.userType,
-      designationId: u.designationId, departmentIds: u.departmentIds,
+      // designationId: u.designationId, departmentIds: u.departmentIds,
     });
     setIsOpen(true);
   };
 
-  const toggleDepartment = (id: string) => {
-    setForm((f) => ({
-      ...f,
-      departmentIds: f.departmentIds.includes(id)
-        ? f.departmentIds.filter((d) => d !== id)
-        : [...f.departmentIds, id],
-    }));
-  };
+  // const toggleDepartment = (id: string) => {
+  //   setForm((f) => ({
+  //     ...f,
+  //     departmentIds: f.departmentIds.includes(id)
+  //       ? f.departmentIds.filter((d) => d !== id)
+  //       : [...f.departmentIds, id],
+  //   }));
+  // };
 
   const submit = () => {
-    if (!form.name || !form.email || !form.username || !form.designationId) {
+    if (!form.name || !form.email || !form.username) {
       toast.error('Please fill required fields'); return;
     }
-    if (form.departmentIds.length === 0) { toast.error('Select at least one department'); return; }
+    // if (form.departmentIds.length === 0) { toast.error('Select at least one department'); return; }
     if (!editing && !form.password) { toast.error('Password required for new users'); return; }
 
     if (editing) {
       const updates: Partial<User> = {
         name: form.name, phone: form.phone, email: form.email, username: form.username,
         status: form.status, userType: form.userType,
-        designationId: form.designationId, departmentIds: form.departmentIds,
+        // designationId: form.designationId, departmentIds: form.departmentIds,
       };
       if (form.password) updates.password = form.password;
       updateUser(editing.id, updates);
@@ -129,7 +129,7 @@ export default function UsersPage() {
           <BaseSelect label="Status" value={form.status} onValueChange={(v) => setForm({ ...form, status: v as UserStatus })}
             options={[{ value: UserStatus.ACTIVE, label: 'Active' }, { value: UserStatus.INACTIVE, label: 'Inactive' }]} />
         </div>
-        <BaseSelect label="Designation" required value={form.designationId} onValueChange={(v) => setForm({ ...form, designationId: v })}
+        {/* <BaseSelect label="Designation" required value={form.designationId} onValueChange={(v) => setForm({ ...form, designationId: v })}
           options={designations.map((d) => ({ value: d.id, label: d.name }))} placeholder="Select designation" />
         <div className="grid gap-2">
           <Label>Departments *</Label>
@@ -141,7 +141,7 @@ export default function UsersPage() {
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
       </BaseDialog>
     </AppLayout>
   );

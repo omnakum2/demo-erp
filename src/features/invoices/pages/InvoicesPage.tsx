@@ -22,7 +22,7 @@ import { blobToBase64 } from '../services/invoiceService';
 
 export default function InvoicesPage() {
   const navigate = useNavigate();
-  const { invoices, products, customers, addInvoice, decrementStock, getMaterialCode } = useData();
+  const { invoices, products, customers, addInvoice } = useData();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewInvoice, setPreviewInvoice] = useState<Invoice | null>(null);
@@ -55,11 +55,11 @@ export default function InvoicesPage() {
     if (!selectedProduct) { toast.error('Please select a product'); return; }
     if (qty < 1) { toast.error('Quantity must be at least 1'); return; }
     const alreadyQty = items.find((i) => i.productId === selectedProduct.id)?.quantity ?? 0;
-    if (alreadyQty + qty > selectedProduct.stock) {
-      toast.error(`Only ${selectedProduct.stock - alreadyQty} ${selectedProduct.unit} available in stock.`);
-      return;
-    }
-    const material = getMaterialCode(selectedProduct.materialId);
+    // if (alreadyQty + qty > selectedProduct.stock) {
+    //   toast.error(`Only ${selectedProduct.stock - alreadyQty} ${selectedProduct.unit} available in stock.`);
+    //   return;
+    // }
+    // const material = getMaterialCode(selectedProduct.materialId);
     const idx = items.findIndex((i) => i.productId === selectedProduct.id);
     if (idx >= 0) {
       const next = [...items];
@@ -68,8 +68,8 @@ export default function InvoicesPage() {
       setItems(next);
     } else {
       setItems([...items, {
-        productId: selectedProduct.id, productName: selectedProduct.name, productCode: selectedProduct.code,
-        material, quantity: qty, unit: selectedProduct.unit,
+        productId: selectedProduct.id, productName: selectedProduct.name,
+        quantity: qty, unit: selectedProduct.unit,
         unitPrice: selectedProduct.price, total: qty * selectedProduct.price,
       }]);
     }
@@ -92,9 +92,9 @@ export default function InvoicesPage() {
     // Final stock validation
     for (const it of items) {
       const prod = products.find((p) => p.id === it.productId);
-      if (!prod || it.quantity > prod.stock) {
-        toast.error(`Insufficient stock for ${it.productName}.`); return;
-      }
+      // if (!prod || it.quantity > prod.stock) {
+      //   toast.error(`Insufficient stock for ${it.productName}.`); return;
+      // }
     }
     const number = `${branding.invoice.prefix}-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(3, '0')}`;
     const today = new Date().toISOString().split('T')[0];
@@ -110,7 +110,7 @@ export default function InvoicesPage() {
     };
     addInvoice(newInvoice);
     // deduct stock
-    items.forEach((i) => decrementStock(i.productId, i.quantity));
+    // items.forEach((i) => decrementStock(i.productId, i.quantity));
     toast.success(`Invoice ${number} created and stock updated.`);
     setIsCreateOpen(false);
     resetForm();
@@ -178,9 +178,9 @@ export default function InvoicesPage() {
           <h4 className="mb-3 font-medium text-foreground">Add Product</h4>
           <div className="grid gap-3 sm:grid-cols-[1fr_120px_120px_120px_auto]">
             <BaseSelect label="Product Name" value={selProductId} onValueChange={setSelProductId}
-              options={activeProducts.map((p) => ({ value: p.id, label: `${p.code} — ${p.name}` }))}
+              options={activeProducts.map((p) => ({ value: p.id, label: `${p.name}` }))}
               placeholder="Select a product" />
-            <BaseInput label="Available Stock" value={selectedProduct ? `${selectedProduct.stock} ${selectedProduct.unit}` : ''} disabled readOnly />
+            {/* <BaseInput label="Available Stock" value={selectedProduct ? `${selectedProduct.stock} ${selectedProduct.unit}` : ''} disabled readOnly /> */}
             <BaseInput label="Unit Price (₹)" value={selectedProduct ? selectedProduct.price.toFixed(2) : ''} disabled readOnly />
             <BaseInput label="Quantity" type="number" min="1" value={String(qty)} onChange={(e) => setQty(parseInt(e.target.value) || 1)} />
             <div className="flex items-end">
@@ -197,7 +197,7 @@ export default function InvoicesPage() {
                <div key={item.productId} className="flex items-center justify-between p-4">
                   <div>
                     <p className="font-medium text-foreground">{item.productName}</p>
-                    <p className="text-sm text-muted-foreground">{item.material} • {formatCurrency(item.unitPrice)} × {item.quantity} {item.unit}</p>
+                    <p className="text-sm text-muted-foreground">{item.productName} • {formatCurrency(item.unitPrice)} × {item.quantity} {item.unit}</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="font-medium">{formatCurrency(item.total)}</span>

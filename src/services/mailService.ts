@@ -36,7 +36,7 @@ export async function sendMail(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "x-public-key": 'c5ce7886683b6b4fbe45fa536902fc2fa586eab16f93081b520f124c82bfa937',
+          "x-api-key": 'c5ce7886683b6b4fbe45fa536902fc2fa586eab16f93081b520f124c82bfa937',
         },
         body: JSON.stringify(payload)
       }

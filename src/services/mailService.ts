@@ -6,7 +6,7 @@
  * be run directly in the browser. It must be hosted in the backend. 
  */
 import type { Invoice } from '@/types/common';
-import { branding, formatCurrency, formatDate } from '@/config/branding.config';
+import { branding } from '@/config/branding.config';
 import { getInvoiceFilename } from '@/services/pdfService';
 import { toast } from 'sonner';
 
@@ -17,9 +17,12 @@ export interface EmailAttachment {
 }
 
 export interface MailPayload {
-  recipientEmail: string;
+  to: string;
   subject: string;
-  htmlBody: string;
+  html: string;
+  text?: string;
+  cc?: string[];
+  bcc?: string[];
   attachments?: EmailAttachment[];
 }
 
@@ -28,11 +31,12 @@ export async function sendMail(
 ): Promise<{ success: boolean; message: string }> {
   try {
     const response = await fetch(
-      'https://news-bot-backend.vercel.app/api/send-invoice',
+      'https://email-gateway-flax.vercel.app/send-email',
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "x-public-key": 'c5ce7886683b6b4fbe45fa536902fc2fa586eab16f93081b520f124c82bfa937',
         },
         body: JSON.stringify(payload)
       }
@@ -68,18 +72,21 @@ export async function sendInvoiceEmail(invoice: Invoice, pdfBase64: string): Pro
     </div>
   `;
 
+  const text = `Dear ${invoice.customerSnapshot.name},\n\nPlease find the attached invoice #${invoice.invoiceNumber} for your reference.\n\nThank you,\n${branding.primaryBrand}`;
+
   const res = await sendMail({
-  recipientEmail: to,
-  subject: `Invoice from ${branding.primaryBrand} - ${invoice.invoiceNumber}`,
-  htmlBody: html,
-  attachments: [
-    {
-      filename,
-      content: pdfBase64,
-      encoding: "base64"
-    }
-  ]
-});
+    to,
+    subject: `Invoice from ${branding.primaryBrand} - ${invoice.invoiceNumber}`,
+    html,
+    text,
+    attachments: [
+      {
+        filename,
+        content: pdfBase64,
+        encoding: "base64"
+      }
+    ]
+  });
   
   if (res.success) toast.success(`Invoice emailed to ${to} with attachment ${filename}`);
   else toast.error(res.message);

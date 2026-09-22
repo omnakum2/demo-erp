@@ -13,12 +13,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { useData } from '@/contexts/DataContext';
 import { PaymentMethod, EntityStatus } from '@/types/enums';
 import { sendInvoiceEmail } from '@/services/mailService';
-import { generateInvoicePDFBlob, downloadInvoicePDF, getInvoiceFilename } from '@/services/pdfService';
+import { generateInvoicePDFBlob, downloadInvoicePDF } from '@/services/pdfService';
 import { branding, formatCurrency, formatDate } from '@/config/branding.config';
 import { InvoiceTemplate } from '../components/InvoiceTemplate';
 import type { Invoice, InvoiceItem, TableColumn } from '@/types/common';
 import { toast } from 'sonner';
-import { blobToBase64 } from '../services/invoiceService';
 
 export default function InvoicesPage() {
   const navigate = useNavigate();
@@ -136,8 +135,7 @@ export default function InvoicesPage() {
     try {
       toast.loading('Preparing email and PDF...', { id: 'email' });
       const blob = await generateInvoicePDFBlob(previewInvoice);
-      const base64 = await blobToBase64(blob);
-      await sendInvoiceEmail(previewInvoice, base64);
+      await sendInvoiceEmail(previewInvoice, blob);
       toast.dismiss('email');
     } catch (error) {
       toast.error('Failed to prepare email', { id: 'email' });

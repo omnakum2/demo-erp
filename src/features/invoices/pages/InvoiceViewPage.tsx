@@ -9,10 +9,9 @@ import { StatusBadge } from '@/components/base/StatusBadge';
 import { useData } from '@/contexts/DataContext';
 import { formatCurrency, formatDate } from '@/config/branding.config';
 import { sendInvoiceEmail } from '@/services/mailService';
-import { generateInvoicePDFBlob, downloadInvoicePDF, getInvoiceFilename } from '@/services/pdfService';
+import { generateInvoicePDFBlob, downloadInvoicePDF } from '@/services/pdfService';
 import { InvoiceTemplate } from '../components/InvoiceTemplate';
 import { toast } from 'sonner';
-import { blobToBase64 } from '../services/invoiceService';
 
 export default function InvoiceViewPage() {
   const { id } = useParams();
@@ -42,8 +41,7 @@ export default function InvoiceViewPage() {
     try {
       toast.loading('Preparing email and PDF...', { id: 'email' });
       const blob = await generateInvoicePDFBlob(invoice);
-      const base64 = await blobToBase64(blob);
-      await sendInvoiceEmail(invoice, base64);
+      await sendInvoiceEmail(invoice, blob);
       toast.dismiss('email');
     } catch (error) {
       toast.error('Failed to prepare email', { id: 'email' });

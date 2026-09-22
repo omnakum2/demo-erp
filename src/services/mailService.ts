@@ -1,19 +1,16 @@
 /**
  * Reusable mailing service.
- * Currently a frontend stub — replace `sendInvoiceEmail` body with an Axios/Fetch
- * call to your NestJS + Nodemailer endpoint (e.g. POST /api/mail/invoice).
- * Note for future implementation: Nodemailer is a backend Node.js module and cannot
- * be run directly in the browser. It must be hosted in the backend. 
+ * Sends emails via the external email-gateway using multipart/form-data,
+ * which allows direct Blob file attachments without base64 conversion.
  */
 import type { Invoice } from '@/types/common';
 import { branding } from '@/config/branding.config';
 import { getInvoiceFilename } from '@/services/pdfService';
 import { toast } from 'sonner';
 
-export interface EmailAttachment {
+export interface FileAttachment {
   filename: string;
-  content: string;
-  encoding?: string;
+  blob: Blob;
 }
 
 export interface MailPayload {
@@ -21,24 +18,34 @@ export interface MailPayload {
   subject: string;
   html: string;
   text?: string;
-  cc?: string[];
-  bcc?: string[];
-  attachments?: EmailAttachment[];
+  files?: FileAttachment[];
 }
 
 export async function sendMail(
   payload: MailPayload
 ): Promise<{ success: boolean; message: string }> {
   try {
+    const formData = new FormData();
+    formData.append('to', payload.to);
+    formData.append('subject', payload.subject);
+    formData.append('html', payload.html);
+    if (payload.text) formData.append('text', payload.text);
+
+    if (payload.files?.length) {
+      for (const file of payload.files) {
+        formData.append('files', file.blob, file.filename);
+      }
+    }
+
     const response = await fetch(
-      'https://email-gateway-flax.vercel.app/send-email',
+      'https://email-gateway-flax.vercel.app/send-public-email',
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          "x-api-key": 'c5ce7886683b6b4fbe45fa536902fc2fa586eab16f93081b520f124c82bfa937',
+          // Do NOT set Content-Type — browser auto-sets multipart/form-data with boundary
+          'x-public-key': 'aea5c744ab2adf20a9717bc022d500a1928b1309085c8dfeedc4a51eb36eeaa2',
         },
-        body: JSON.stringify(payload)
+        body: formData,
       }
     );
 
@@ -46,24 +53,27 @@ export async function sendMail(
 
     return {
       success: response.ok,
-      message: data.message ?? 'Email sent'
+      message: data.message ?? 'Email sent',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      message: error.message
+      message: error instanceof Error ? error.message : 'Failed to send email',
     };
   }
 }
 
-export async function sendInvoiceEmail(invoice: Invoice, pdfBase64: string): Promise<void> {
+/**
+ * Send an invoice email with the PDF blob attached directly — no base64 needed.
+ */
+export async function sendInvoiceEmail(invoice: Invoice, pdfBlob: Blob): Promise<void> {
   const to = invoice.customerSnapshot.email;
   if (!to) {
     toast.error('Customer email is required to send invoice.');
     return;
   }
   const filename = getInvoiceFilename(invoice);
-  
+
   const html = `
     <div style="font-family:Arial,sans-serif;color:#222">
       <p>Dear ${invoice.customerSnapshot.name},</p>
@@ -79,15 +89,9 @@ export async function sendInvoiceEmail(invoice: Invoice, pdfBase64: string): Pro
     subject: `Invoice from ${branding.primaryBrand} - ${invoice.invoiceNumber}`,
     html,
     text,
-    attachments: [
-      {
-        filename,
-        content: pdfBase64,
-        encoding: "base64"
-      }
-    ]
+    files: [{ filename, blob: pdfBlob }],
   });
-  
+
   if (res.success) toast.success(`Invoice emailed to ${to} with attachment ${filename}`);
   else toast.error(res.message);
 }
